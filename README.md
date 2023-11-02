@@ -16,6 +16,10 @@ CREATE TABLE employees (
     company_info TEXT
 );
 
+INSERT INTO employees (department, position, full_name, address, phone, date_of_birth, hire_date, salary, company_info)
+VALUES ('IT', 'Програміст', 'Анна Костенко', 'вул. Лі Джи Ін, 11', '+380987654321', '1999-03-11', '2023-11-01', 2000.00, 'Samsung');
+
+
 <img width="1179" alt="Снимок экрана 2023-11-02 в 11 37 39" src="https://github.com/elhola/EmployeesUI/assets/25703908/41686fce-c202-46d4-a28e-040d5bbd22ab">
 
 
