@@ -45,11 +45,12 @@ class EmployeeManager:
         return report
 
     def from_db(self, employee_id):
-        query = "SELECT * FROM employees WHERE id = %(employee_id)s LIMIT 1"
-        values = {"employee_id": employee_id}
+        query = "SELECT * FROM employees WHERE id = %s"
+        values = (employee_id,)
         result = self.db.fetch(query, values)
         if result:
-            return Employee(*result[0])
+            id, department, position, full_name, address, phone, date_of_birth, hire_date, salary = result[0]
+            return Employee(id, department, position, full_name, address, phone, date_of_birth, hire_date, salary)
         return None
 
     def get_all_employees(self):
@@ -60,7 +61,7 @@ class EmployeeManager:
 
     def update_in_db(self, employee):
         query = "UPDATE employees SET department = %s, position = %s, full_name = %s, address = %s, phone = %s, " \
-                "date_of_birth = %s, hire_date = %s, salary = %s, company_info = %s WHERE id = %s"
+                "date_of_birth = %s, hire_date = %s, salary = %s WHERE id = %s"
         values = (
             employee.department,
             employee.position,
@@ -70,7 +71,6 @@ class EmployeeManager:
             employee.date_of_birth,
             employee.hire_date,
             employee.salary,
-            employee.company_info,
             employee.id
         )
         self.db.execute(query, values)

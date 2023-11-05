@@ -212,11 +212,12 @@ class EmployeeApp(QMainWindow):
         self.employee_manager.export_to_txt(filename, department)
 
     def add_employee(self):
-        new_employee = Employee(None, "", "", "", "", "", "", "", 0, "")
+        new_employee = Employee(None, "", "", "", "", "", None, None, 0)
         dialog = EmployeeEditDialog(new_employee, self.employee_manager)
         if dialog.exec_():
-            pass
-
+            employee_id = dialog.get_updated_employee().save_to_db(self.employee_manager.db)
+            self.populate_employee_combobox()
+            self.employee_combobox.setCurrentIndex(self.employee_combobox.findData(employee_id))
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

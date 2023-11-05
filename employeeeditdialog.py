@@ -2,7 +2,6 @@ from datetime import datetime
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLineEdit, QComboBox, QPushButton, QTextEdit, QDateEdit
 from employee import Employee
 
-
 class EmployeeEditDialog(QDialog):
     def __init__(self, employee, employee_manager):
         super().__init__()
@@ -59,11 +58,6 @@ class EmployeeEditDialog(QDialog):
         self.hire_date_dateedit.setCalendarPopup(True)
         layout.addWidget(self.hire_date_dateedit)
 
-        self.company_info_textedit = QTextEdit()
-        self.company_info_textedit.setPlainText(self.employee.company_info)
-        layout.addWidget(self.company_info_textedit)
-        self.company_info_textedit.setPlaceholderText("Компанія")
-
         save_button = QPushButton("Зберегти")
         save_button.clicked.connect(self.accept)
         layout.addWidget(save_button)
@@ -72,9 +66,11 @@ class EmployeeEditDialog(QDialog):
         delete_button.clicked.connect(self.delete_employee)
         layout.addWidget(delete_button)
 
-        self.add_employee_button = QPushButton("Додати співробітника")
-        self.add_employee_button.clicked.connect(self.add_employee)
-        layout.addWidget(self.add_employee_button)
+        if self.employee is None:
+            # Если сотрудник не существует, добавляем кнопку "Додати співробітника"
+            add_employee_button = QPushButton("Додати співробітника")
+            add_employee_button.clicked.connect(self.add_employee)
+            layout.addWidget(add_employee_button)
 
         self.setLayout(layout)
 
@@ -86,47 +82,9 @@ class EmployeeEditDialog(QDialog):
             full_name=self.full_name_lineedit.text(),
             address=self.address_lineedit.text(),
             phone=self.phone_lineedit.text(),
-            date_of_birth=self.date_of_birth_dateedit.date(),
-            hire_date=self.hire_date_dateedit.date(),
-            salary=float(self.salary_lineedit.text()),
-            company_info=self.company_info_textedit.toPlainText()
-        )
-        if self.employee_manager:
-            new_employee.save_to_db(self.employee_manager.db)
-        self.accept()
-
-    def get_updated_employee(self):
-        updated_employee = Employee(
-            id=self.id,
-            department=self.department_combobox.currentText(),
-            position=self.position_lineedit.text(),
-            full_name=self.full_name_lineedit.text(),
-            address=self.address_lineedit.text(),
-            phone=self.phone_lineedit.text(),
-            date_of_birth=str(self.date_of_birth_dateedit.date().toString('yyyy-MM-dd')),
-            hire_date=str(self.hire_date_dateedit.date().toString('yyyy-MM-dd')),
-            salary=float(self.salary_lineedit.text()),
-            company_info=self.company_info_textedit.toPlainText()
-        )
-        return updated_employee
-
-    def delete_employee(self):
-        if self.employee:
-            self.employee.delete_from_db(self.employee_manager.db)
-            self.accept()
-
-    def add_employee(self):
-        new_employee = Employee(
-            id=None,
-            department=self.department_combobox.currentText(),
-            position=self.position_lineedit.text(),
-            full_name=self.full_name_lineedit.text(),
-            address=self.address_lineedit.text(),
-            phone=self.phone_lineedit.text(),
             date_of_birth=self.date_of_birth_dateedit.date().toString("yyyy-MM-dd"),
             hire_date=self.hire_date_dateedit.date().toString("yyyy-MM-dd"),
-            salary=float(self.salary_lineedit.text()),
-            company_info=self.company_info_textedit.toPlainText()
+            salary=float(self.salary_lineedit.text())
         )
         if self.employee_manager:
             new_employee.save_to_db(self.employee_manager.db)
@@ -142,8 +100,7 @@ class EmployeeEditDialog(QDialog):
             phone=self.phone_lineedit.text(),
             date_of_birth=self.date_of_birth_dateedit.date().toString("yyyy-MM-dd"),
             hire_date=self.hire_date_dateedit.date().toString("yyyy-MM-dd"),
-            salary=float(self.salary_lineedit.text()),
-            company_info=self.company_info_textedit.toPlainText()
+            salary=float(self.salary_lineedit.text())
         )
         return updated_employee
 
